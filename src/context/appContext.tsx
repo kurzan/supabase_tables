@@ -3,7 +3,19 @@ import { createClient } from "@supabase/supabase-js";
 import { TColumnNames } from "../utils/types";
 
 type TContext = {
-  columnNames: TColumnNames[]
+  columnNames: TColumnNames[],
+  fetchTableData: any,
+  handleTableSelect: any,
+  updateCellValue: any,
+  supabase: any,
+  tables: any,
+  selectedTable: any,
+  tableRows: any,
+  isLoading: any,
+  setSelectedTable: any,
+  setTableRows: any,
+  setColumnNames: any,
+  setIsLoading: any
 }
 
 const AppContext = createContext({} as TContext);
@@ -34,14 +46,14 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
         throw new Error(error.message);
       }
   
-      setTables(data.map((table) => table.name));
+      setTables(data.map((table: any) => table.name));
 
     } catch (error) {
       console.error(error);
     }
   };
 
-  const fetchTableData = async (tableName) => {
+  const fetchTableData = async (tableName: any) => {
     try {
       setIsLoading(true);
 
@@ -53,6 +65,7 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
       }
 
       setColumnNames(columnNames);
+      //@ts-ignore
       setTableRows(tabelRows);
       setIsLoading(false);
 
@@ -62,20 +75,21 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
   };
 
 
-  const handleTableSelect = (tableName) => {
+  const handleTableSelect = (tableName: any) => {
     setSelectedTable(tableName);
     fetchTableData(tableName);
   };
 
-  const updateCellValue = async (rowIndex, columnName, newValue) => {
+  const updateCellValue = async (rowIndex: any, columnName: any, newValue: any) => {
     try {
       const updatedData = [...tableRows];
-
+      //@ts-ignore
       updatedData[rowIndex][columnName] = newValue;
   
       const { data: updatedRow, error } = await supabase
         .from(selectedTable)
         .update({ [columnName]: newValue })
+        //@ts-ignore
         .eq('id', updatedData[rowIndex].id);
   
       if (error) throw error;

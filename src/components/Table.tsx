@@ -5,7 +5,6 @@ import { findTable } from "../utils/utils";
 const Table = () => {
   const [currentColumns, setCurrentColumns] = useState([]);
   const [foreignTableData, setForeignTableData] = useState({});
-
   const {
     supabase,
     tables,
@@ -19,10 +18,11 @@ const Table = () => {
   useEffect(() => {
     const foreignKeyColumns = columnNames.filter((column) => column.is_foreign_key);
     const columns = foreignKeyColumns.map((column) => column.column_name);
+    //@ts-ignore
     setCurrentColumns(columns);
   }, [columnNames]);
 
-  const fetchForeignTableData = async (tableName) => {
+  const fetchForeignTableData = async (tableName: any) => {
     try {
       const { data, error } = await supabase.from(tableName).select("*");
 
@@ -68,22 +68,24 @@ const Table = () => {
           </thead>
           <tbody>
             {tableRows &&
-              tableRows.map((row, rowIndex) => (
+              tableRows.map((row: any, rowIndex: any) => (
                 <tr key={rowIndex}>
                   {Object.entries(row).map(([columnName, value]) => {
                     const currentColumn = columnNames.find((column) => column.column_name === columnName);
 
                     if (currentColumn?.is_foreign_key) {
                       const foreignTable = findTable(columnName, tables);
+                      //@ts-ignore
                       const foreignTableRows = foreignTableData[foreignTable] || [];
 
                       return (
                         <td className="border border-slate-300" key={columnName}>
                           <select
+                          //@ts-ignore
                             value={value}
                             onChange={(e) => updateCellValue(rowIndex, columnName, e.target.value)}
                           >
-                            {foreignTableRows.map((row) => (
+                            {foreignTableRows.map((row: any) => (
                               <option key={row.id} value={row.id}>
                                 {row.name}
                               </option>
@@ -97,6 +99,7 @@ const Table = () => {
                       <td className="border border-slate-300" key={columnName}>
                         <input
                           type="text"
+                          //@ts-ignore
                           value={value}
                           onChange={(e) => updateCellValue(rowIndex, columnName, e.target.value)}
                         />
