@@ -1,7 +1,12 @@
 import { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
+import { TColumnNames } from "../utils/types";
 
-const AppContext = createContext({});
+type TContext = {
+  columnNames: TColumnNames[]
+}
+
+const AppContext = createContext({} as TContext);
 
 const AppContextProvider = ({children}: {children: ReactNode}) => {
   const supabaseUrl = process.env.REACT_APP_SUPABASE_URL as string;
@@ -10,7 +15,7 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
   const supabase = createClient(supabaseUrl, supabaseKey
   );
 
-  const [tables, setTables] = useState([]);
+  const [tables, setTables] = useState<string[]>([]);
   const [selectedTable, setSelectedTable] = useState('');
   const [tableRows, setTableRows] = useState([]);
   const [columnNames, setColumnNames] = useState([]);
@@ -31,15 +36,10 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
   
       setTables(data.map((table) => table.name));
 
-      console.log(tables)
-
-
     } catch (error) {
       console.error(error);
     }
   };
-
-
 
   const fetchTableData = async (tableName) => {
     try {
@@ -56,14 +56,7 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
       setTableRows(tabelRows);
       setIsLoading(false);
 
-      console.log(tabelRows)
-      console.log(columnNames)
-
     } catch (error) {
-      console.error(error);
-
-      console.log(error)
-
       setIsLoading(false);
     }
   };
@@ -81,7 +74,7 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
       updatedData[rowIndex][columnName] = newValue;
   
       const { data: updatedRow, error } = await supabase
-        .from('User')
+        .from(selectedTable)
         .update({ [columnName]: newValue })
         .eq('id', updatedData[rowIndex].id);
   
@@ -89,13 +82,11 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
   
       setTableRows(updatedData);
   
-      console.log('Cell value updated:', updatedRow);
+      console.log('Cell value updated');
     } catch (error) {
-      console.error('Failed to update cell value:', error.message);
+      console.error(error);
     }
   };
-
-
 
   return (
     <AppContext.Provider
