@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/supabase_tables/static/css/main.5848402f.css",
+    "main.js": "/supabase_tables/static/js/main.a7a830fc.js",
+    "static/js/787.b598355c.chunk.js": "/supabase_tables/static/js/787.b598355c.chunk.js",
+    "index.html": "/supabase_tables/index.html",
+    "main.5848402f.css.map": "/supabase_tables/static/css/main.5848402f.css.map",
+    "main.a7a830fc.js.map": "/supabase_tables/static/js/main.a7a830fc.js.map",
+    "787.b598355c.chunk.js.map": "/supabase_tables/static/js/787.b598355c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5848402f.css",
+    "static/js/main.a7a830fc.js"
+  ]
+}
