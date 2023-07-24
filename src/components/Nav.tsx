@@ -14,7 +14,7 @@ const Nav = () => {
       <ul className="mt-4">
         {tables.map((tableName: any) => (
           <li className="mr-6"  key={tableName} onClick={() => handleTableSelect(tableName)}>
-            <a className="text-blue-500 hover:text-blue-800" href="#">{tableName}</a>
+            <a className="text-blue-500 hover:text-blue-800">{tableName}</a>
           </li>
         ))}
       </ul>

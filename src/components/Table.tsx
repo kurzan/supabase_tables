@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { findTable } from "../utils/utils";
+import { TTableRow } from "../utils/types";
 
 const Table = () => {
-  const [currentColumns, setCurrentColumns] = useState([]);
-  const [foreignTableData, setForeignTableData] = useState({});
+  const [currentColumns, setCurrentColumns] = useState<string[]>([]);
+  const [foreignTableData, setForeignTableData] = useState<TTableRow>({} as TTableRow);
   const {
     supabase,
     tables,
@@ -15,14 +16,14 @@ const Table = () => {
     isLoading,
   } = useAppContext();
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const foreignKeyColumns = columnNames.filter((column) => column.is_foreign_key);
     const columns = foreignKeyColumns.map((column) => column.column_name);
-    //@ts-ignore
+
     setCurrentColumns(columns);
   }, [columnNames]);
 
-  const fetchForeignTableData = async (tableName: any) => {
+  const fetchForeignTableData = async (tableName: string) => {
     try {
       const { data, error } = await supabase.from(tableName).select("*");
 
@@ -34,6 +35,8 @@ const Table = () => {
         ...prevState,
         [tableName]: data,
       }));
+
+      console.log(foreignTableData)
     } catch (error) {
       console.error(error);
     }
@@ -68,7 +71,7 @@ const Table = () => {
           </thead>
           <tbody>
             {tableRows &&
-              tableRows.map((row: any, rowIndex: any) => (
+              tableRows.map((row: TTableRow, rowIndex: number) => (
                 <tr key={rowIndex}>
                   {Object.entries(row).map(([columnName, value]) => {
                     const currentColumn = columnNames.find((column) => column.column_name === columnName);
@@ -76,16 +79,15 @@ const Table = () => {
                     if (currentColumn?.is_foreign_key) {
                       const foreignTable = findTable(columnName, tables);
                       //@ts-ignore
-                      const foreignTableRows = foreignTableData[foreignTable] || [];
+                      const foreignTableRows: TTableRow[] = foreignTableData[foreignTable] || [];
 
                       return (
                         <td className="border border-slate-300" key={columnName}>
                           <select
-                          //@ts-ignore
-                            value={value}
+                            value={value as string}
                             onChange={(e) => updateCellValue(rowIndex, columnName, e.target.value)}
                           >
-                            {foreignTableRows.map((row: any) => (
+                            {foreignTableRows.map((row: TTableRow) => (
                               <option key={row.id} value={row.id}>
                                 {row.name}
                               </option>
@@ -99,8 +101,7 @@ const Table = () => {
                       <td className="border border-slate-300" key={columnName}>
                         <input
                           type="text"
-                          //@ts-ignore
-                          value={value}
+                          value={value as string}
                           onChange={(e) => updateCellValue(rowIndex, columnName, e.target.value)}
                         />
                       </td>
