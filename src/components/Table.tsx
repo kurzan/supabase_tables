@@ -52,18 +52,18 @@ const Table = () => {
   }, [currentColumns, tables]);
 
   return (
-    <div className="">
+    <div className="max-w-prose">
       <h2 className="text-xl font-bold">Table Editor {selectedTable}</h2>
       {!selectedTable && !isLoading && <p>Select table</p>}
       {isLoading ? (
         <p>Loading...</p>
       ) : (
-        <table className="border-collapse border border-slate-400 mt-4">
+        <table className="border-collapse table-auto border border-gray-400 mt-4">
           <thead>
             <tr>
               {selectedTable &&
                 columnNames.map((column) => (
-                  <th className="border border-slate-300" key={column.column_name}>
+                  <th className="border border-gray-400" key={column.column_name}>
                     {column.column_name}
                   </th>
                 ))}
@@ -82,7 +82,7 @@ const Table = () => {
                       const foreignTableRows: TTableRow[] = foreignTableData[foreignTable] || [];
 
                       return (
-                        <td className="border border-slate-300" key={columnName}>
+                        <td className="border border-gray-400" key={columnName}>
                           <select
                             value={value as string}
                             onChange={(e) => updateCellValue(rowIndex, columnName, e.target.value)}
@@ -98,7 +98,7 @@ const Table = () => {
                     }
 
                     return (
-                      <td className="border border-slate-300" key={columnName}>
+                      <td className="border border-gray-400" key={columnName}>
                         <input
                           type="text"
                           value={value as string}

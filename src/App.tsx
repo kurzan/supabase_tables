@@ -5,7 +5,7 @@ import Nav from './components/Nav';
 function App() {
 
   return (
-    <div className=' container flex flex-row m-auto mt-8'>
+    <div className='m-auto container bg-gray-300 flex w-screen h-screen p-10 space-x-6'>
       <Nav />
       <Table />
     </div>
