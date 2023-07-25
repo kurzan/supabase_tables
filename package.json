@@ -1,6 +1,5 @@
 {
   "name": "supabase_tables",
-  "homepage": "https://kurzan.github.io/supabase_tables/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
