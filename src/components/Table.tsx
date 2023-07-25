@@ -2,6 +2,8 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { findTable } from "../utils/utils";
 import { TTableRow } from "../utils/types";
+import Button from "./Button";
+import Form from "./Form";
 
 const Table = () => {
   const [currentColumns, setCurrentColumns] = useState<string[]>([]);
@@ -15,6 +17,12 @@ const Table = () => {
     columnNames,
     isLoading,
   } = useAppContext();
+
+  const [formIsOpen, setFormIsOpen] = useState(false);
+
+  const handleForm = () => {
+    setFormIsOpen((prev) => !prev);
+  }
 
   useLayoutEffect(() => {
     const foreignKeyColumns = columnNames.filter((column) => column.is_foreign_key);
@@ -52,7 +60,7 @@ const Table = () => {
   }, [currentColumns, tables]);
 
   return (
-    <div className="max-w-prose">
+    <div className="">
       <h2 className="text-xl font-bold">Table Editor {selectedTable}</h2>
       {!selectedTable && !isLoading && <p>Select table</p>}
       {isLoading ? (
@@ -63,7 +71,7 @@ const Table = () => {
             <tr>
               {selectedTable &&
                 columnNames.map((column) => (
-                  <th className="border border-gray-400" key={column.column_name}>
+                  <th className="border border-gray-400 p-2" key={column.column_name}>
                     {column.column_name}
                   </th>
                 ))}
@@ -84,6 +92,7 @@ const Table = () => {
                       return (
                         <td className="border border-gray-400" key={columnName}>
                           <select
+                            style={{backgroundColor: 'transparent', width: '100%'}}
                             value={value as string}
                             onChange={(e) => updateCellValue(rowIndex, columnName, e.target.value)}
                           >
@@ -100,6 +109,7 @@ const Table = () => {
                     return (
                       <td className="border border-gray-400" key={columnName}>
                         <input
+                          style={{backgroundColor: 'transparent'}}
                           type="text"
                           value={value as string}
                           onChange={(e) => updateCellValue(rowIndex, columnName, e.target.value)}
@@ -112,6 +122,8 @@ const Table = () => {
           </tbody>
         </table>
       )}
+      {formIsOpen && <Form title='Add data' handleForm={handleForm} />}
+      {!formIsOpen && <Button title="Add data" onClick={handleForm}/>}
     </div>
   );
 };

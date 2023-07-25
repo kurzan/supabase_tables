@@ -11,6 +11,7 @@ type TContext = {
   selectedTable: string,
   tableRows: TTableRow[],
   isLoading: boolean,
+  fetchTableData: any
 }
 
 const AppContext = createContext({} as TContext);
@@ -52,7 +53,7 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
     try {
       setIsLoading(true);
 
-      const { data: tabelRows, error: tableRowsError } = await supabase.from(tableName).select('*');
+      const { data: tabelRows, error: tableRowsError } = await supabase.from(tableName).select('*').order('id');
       const { data: columnNames, error: columnsNamesError } = await supabase.rpc('get_columns_info', { table_name: `${tableName}` });
 
       if (columnsNamesError || tableRowsError) {
@@ -100,6 +101,7 @@ const AppContextProvider = ({children}: {children: ReactNode}) => {
       value={{
         updateCellValue,
         handleTableSelect,
+        fetchTableData,
         supabase,
         tables,
         selectedTable,
